@@ -7,3 +7,6 @@ __pycache__/
 *service-account*.json
 *credentials*.json
 .claude/launch.json
+
+# 公開リポジトリに載せない個人情報メモ
+.private/
