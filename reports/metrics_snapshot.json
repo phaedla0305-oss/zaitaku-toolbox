@@ -1,7 +1,7 @@
 {
   "period": {
-    "start": "2026-10-17",
-    "end": "2026-11-13",
+    "start": "2026-10-18",
+    "end": "2026-11-14",
     "note": "両端を含む。GA4・Search Console・A8 で同じ期間"
   },
   "ga4": {
@@ -37,8 +37,8 @@
     "other_paths": {
       "/zaitaku-toolbox/": 5,
       "/affiliate-team/": 4,
+      "/": 2,
       "/affiliate-team/articles/cafe-free-wifi-safety-vpn.html": 2,
-      "/": 1,
       "/affiliate-team/articles/freelance-kotei-ip-hitsuyou-mail-template.html": 1,
       "/affiliate-team/articles/kisei-telework-ip-seigen-checklist.html": 1
     },
@@ -48,14 +48,14 @@
     "status": "取得",
     "pages": {
       "kisei-telework-ip-seigen-checklist": {
-        "impressions": 3,
+        "impressions": 7,
         "clicks": 0,
         "queries": [
           {
             "query": "ﾘﾓｰﾄ帰省",
-            "impressions": 3,
+            "impressions": 7,
             "clicks": 0,
-            "position": 12.7
+            "position": 14.9
           }
         ]
       },
