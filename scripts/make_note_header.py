@@ -97,7 +97,9 @@ def paper_mask(src: Image.Image, box) -> Image.Image:
     for y in range(y0, y1):
         for x in range(x0, x1):
             r, g, b = sp[x, y]
-            skin = (r - b) > 52 and r > 150
+            in_hand = HAND_ZONE[0] <= x <= HAND_ZONE[2] and HAND_ZONE[1] <= y <= HAND_ZONE[3]
+            sleeve = y >= 626 and lum((r, g, b)) < 215 and g >= r - 8  # 袖（緑のニット）
+            skin = in_hand and (((r - b) > 52 and r > 150) or sleeve)
             if not skin:
                 mp[x, y] = 255
     # 手の輪郭を少し内側に（にじみ防止）
@@ -122,6 +124,130 @@ def draw_table(layer: Image.Image, cols, rows, label_size: int, line_w: float, l
         text_center(d, cx, cy, lab, f, LABEL_INK + (255,))
 
 
+HAND_ZONE = (225, 495, 385, 670)  # 左下の手（表に重なる部分）。肌の画素は描き換えない
+SHEET = (300, 271, 1085, 670)    # まっすぐにした紙（左, 上, 右, 下）
+CARD_RIGHT = (1070, 300, 1280, 462)  # 右の雲のカードの高さ。紙の右端より右は描き換えない
+
+
+def straighten_sheet(img: Image.Image) -> Image.Image:
+    """元の紙は奥行きのある台形（下ほど広い）で、まっすぐな表と合わない。
+    紙を長方形にそろえる。左右の縁を行ごとに見て、長方形の内側の木目は紙に、外側に出た紙は木目に置き換える。
+    写すときは、同じ行の少し離れた所（紙）や、少し上の行の同じ位置（木目）をまとめて写し、質感がつながるようにする。
+    手のまわり（左下）と右の雲のカードは描き換えない。"""
+    out = img.copy()
+    p, o = img.load(), out.load()
+    x0, y0, x1, y1 = SHEET
+    paperish = lambda c: lum(c) > 214 and (c[0] - c[2]) < 50
+    is_wood = lambda c: (c[0] - c[2]) > 60 and lum(c) < 232
+    in_box = lambda b, x, y: b[0] <= x <= b[2] and b[1] <= y <= b[3]
+    keep = lambda x, y: in_box(CARD_RIGHT, x, y) or in_box(HAND_ZONE, x, y)
+    # 手と袖の画素（左下）。これ以外は手のまわりでも描き換えてよい
+    body = lambda x, y: in_box(HAND_ZONE, x, y) and (
+        (p[x, y][0] >= 240 and (p[x, y][0] - p[x, y][2]) >= 55) or (y >= 600 and p[x, y][1] >= p[x, y][0] - 8 and lum(p[x, y]) < 215))
+
+    def wood_block(x, y):
+        for dy in (45, 60, 75, 30, 90):
+            for sy in (y - dy, y + dy):
+                if 0 <= sy < H and is_wood(p[x, sy]) and not keep(x, sy):
+                    return p[x, sy]
+        return None
+
+    for y in range(y0, H):
+        # 左の縁：手のある行は、長方形の外にはみ出た紙だけを木目にする（手と袖の画素は触らない）
+        if y >= HAND_ZONE[1]:
+            for x in range(x0 - 22, x0):
+                if paperish(p[x, y]) and not body(x, y):
+                    w = wood_block(x, y)
+                    if w:
+                        o[x, y] = w
+        else:
+            le = None
+            for x in range(x0 + 50, x0 - 30, -1):
+                if not paperish(p[x, y]):
+                    le = x + 1
+                    break
+            if le is not None and le > x0:
+                for x in range(x0, le):
+                    o[x, y] = p[min(x1 - 1, x + (le - x0) + 2), y]
+            elif le is not None and le < x0:
+                for x in range(le - 5, x0):  # 縁のにじみ（少し暗い所）も含めて木目に
+                    if body(x, y):
+                        continue
+                    sx = le - 8 - (x - le)  # 紙の縁を軸に外側へ鏡写し
+                    w = p[sx, y] if is_wood(p[sx, y]) and not body(sx, y) else wood_block(x, y)
+                    if w:
+                        o[x, y] = w
+        # 右の縁（雲のカードの高さの行は、紙の縁がカードの下に隠れているので触らない）
+        if CARD_RIGHT[1] <= y <= CARD_RIGHT[3]:
+            for x in range(x1 - 30, x1):
+                # カードの角（y≥355）がかかる行は木目だけ、それより上は紙以外をすべて紙に
+                if is_wood(p[x, y]) or (y < 355 and not paperish(p[x, y])):
+                    o[x, y] = p[x - 40, y]
+            continue
+        re = None
+        for x in range(x1 - 50, min(W, x1 + 60)):
+            if not paperish(p[x, y]):
+                re = x - 1
+                break
+        if re is None:
+            continue
+        if re < x1 - 1:
+            for x in range(re + 1, x1):
+                if not keep(x, y):
+                    o[x, y] = p[x - (x1 - re) - 2, y]
+        elif re >= x1:
+            for x in range(x1, re + 9):  # 紙の縁の外側の影まで含めて置き換える
+                if keep(x, y):
+                    continue
+                sx = re + 12 + (re - x)  # 紙の縁の影を避けて鏡写し
+                if sx < W and is_wood(p[sx, y]) and not keep(sx, y):
+                    o[x, y] = p[sx, y]
+                else:
+                    w = wood_block(x, y)
+                    if w:
+                        o[x, y] = w
+    # 右下：長方形の外側に残った紙の点を、同じ行の右側の木目で埋め、つなぎ目を少しなじませる
+    for y in range(CARD_RIGHT[3] + 1, H):
+        for x in range(x1, x1 + 45):
+            if paperish(o[x, y]):
+                for sx in range(x + 12, min(W, x + 60)):
+                    if is_wood(o[sx, y]):
+                        o[x, y] = o[sx, y]
+                        break
+    lstrip = (x0 - 28, 380, x0, H)
+    lm = Image.new("L", out.size, 0)
+    lmp = lm.load()
+    for y in range(lstrip[1], lstrip[3]):
+        for x in range(lstrip[0], lstrip[2]):
+            if not body(x, y):
+                lmp[x, y] = 255
+    soft = grain(out.filter(ImageFilter.GaussianBlur(1.6)), 3)
+    out.paste(Image.composite(soft, out, lm).crop(lstrip), lstrip[:2])
+    o = out.load()
+    strip = (x1, CARD_RIGHT[3] + 1, x1 + 45, H)
+    out.paste(grain(out.crop(strip).filter(ImageFilter.GaussianBlur(1.2)), 3), strip[:2])
+    o = out.load()
+    # 右上の角：上の数行も右端までそろえる
+    for y in range(y0, y0 + 30):
+        for x in range(x1 - 25, x1):
+            if not keep(x, y):
+                o[x, y] = p[x - 40, y]
+    # 上の縁：長方形の内側に入った木目だけ紙にする
+    for x in range(x0, x1):
+        for y in range(y0, y0 + 10):
+            if not paperish(p[x, y]):
+                o[x, y] = p[x, y + 14]
+    # 紙の縁にうっすら影を付けて、木の上に置いた紙に見せる
+    for y in range(y0, H):
+        for d in range(1, 6):
+            f = 0.90 + 0.02 * d
+            for x in (x0 - d, x1 - 1 + d):
+                if 0 <= x < W and not keep(x, y) and is_wood(o[x, y]) and not body(x, y):
+                    r, g, b = o[x, y]
+                    o[x, y] = (int(r * f), int(g * f), int(b * f))
+    return out
+
+
 def finalize(layer: Image.Image) -> Image.Image:
     return layer.resize((W, H), Image.LANCZOS)
 
@@ -140,6 +266,9 @@ def build():
     clean_t = erase(clean, tbox, tab_sel, grow=3, filt=17)
     pm = paper_mask(src, tbox)
     clean = Image.composite(clean_t, clean, pm)
+
+    # 3) 紙を長方形にそろえる（表と同じく正面から見た形に）
+    clean = straighten_sheet(clean)
 
     # 手の前景（表に重なる部分）を切り出して保存（SVG 用）
     hands = src.copy().convert("RGBA")
