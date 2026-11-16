@@ -114,3 +114,9 @@
 - ファイル：output/brand/headers/（x-header-L1/L2、note-header-L1/L2、確認用 check、比較 headers-L1-L2-compare.png）
 
 - 採用：**L1（ブランド名＋カテゴリ）**（2026-11-16 運営者決定）。ダウンロードフォルダに x-header-L1-1500x500.png・note-header-L1-1920x1006.png を用意（旧試作は削除）
+
+## 10. 2026-11-16 運営者の決定：Xのヘッダーは現行のまま
+- X：現行のヘッダー（output/x-profile/header-2.png、机・窓・観葉植物・ノートPC・ルーターのフラットなイラスト）を継続。L1は使わない
+- note：Xと同じイラスト・同じ背景色で、表示される中央324pxの帯に合わせたヘッダーを作成（scripts/make_note_header_from_x.py）
+  - N1：イラストのみ（Xと同じ構成）
+  - N2：左にブランド名とカテゴリ（L1と同じ文字組み）、右にイラスト
