@@ -112,3 +112,5 @@
   - L1 ブランド名＋カテゴリ「回線｜VPN｜作業環境｜サブスク」
   - L2 ブランド名＋確認メモ「回線・VPN・サブスクの確認メモ」
 - ファイル：output/brand/headers/（x-header-L1/L2、note-header-L1/L2、確認用 check、比較 headers-L1-L2-compare.png）
+
+- 採用：**L1（ブランド名＋カテゴリ）**（2026-11-16 運営者決定）。ダウンロードフォルダに x-header-L1-1500x500.png・note-header-L1-1920x1006.png を用意（旧試作は削除）
