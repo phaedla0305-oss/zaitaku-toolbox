@@ -119,7 +119,91 @@ def note_header():
     Image.alpha_composite(chk, ov).convert("RGB").save(OUT / "note-header-check.png")
 
 
+LAYOUTS = {
+    # ChatGPT案（2026-11-16）：ヘッダー内のマークと抽象的な一言を省く
+    "L1": dict(name="ブランド名＋カテゴリ", line="回線｜VPN｜作業環境｜サブスク", bold=False, ratio=0.48),
+    "L2": dict(name="ブランド名＋確認メモ", line="回線・VPN・サブスクの確認メモ", bold=False, ratio=0.48),
+}
+
+
+def simple(W, H, cx, cy, title, line, title_px, ratio, f=K):
+    """ブランド名（大）＋オレンジの短い下線＋1行（標準の太さ）。中央揃え。"""
+    im = Image.new("RGB", (W * f, H * f), CREAM)
+    d = ImageDraw.Draw(im)
+    ft = ImageFont.truetype(FB, title_px * f, index=0)
+    fl = ImageFont.truetype(FM, round(title_px * ratio) * f, index=0)
+    tl, tt, tr, tb = d.textbbox((0, 0), title, font=ft)
+    ll, lt, lr, lb = d.textbbox((0, 0), line, font=fl)
+    th, lh = (tb - tt) / f, (lb - lt) / f
+    g1, bar, g2 = title_px * 0.32, 7, title_px * 0.36
+    total = th + g1 + bar + g2 + lh
+    y = cy - total / 2
+    d.text((cx * f - (tl + tr) / 2, y * f - tt), title, font=ft, fill=NAVY)
+    y += th + g1
+    bw = title_px * 1.3
+    d.rounded_rectangle([(cx - bw / 2) * f, y * f, (cx + bw / 2) * f, (y + bar) * f], radius=3.5 * f, fill=ORANGE)
+    y += bar + g2
+    d.text((cx * f - (ll + lr) / 2, y * f - lt), line, font=fl, fill=SUBTLE)
+    return im.resize((W, H), Image.LANCZOS)
+
+
+def x_check(im):
+    W, H = im.size
+    chk = im.copy().convert("RGBA")
+    ov = Image.new("RGBA", chk.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(ov)
+    od.rectangle([0, 0, W, 40], fill=(255, 0, 0, 40))
+    od.rectangle([0, H - 40, W, H], fill=(255, 0, 0, 40))
+    chk = Image.alpha_composite(chk, ov)
+    av = Image.open(icon.OUT / "icon-B-1.png").resize((300, 300))
+    m = Image.new("L", (300, 300), 0)
+    ImageDraw.Draw(m).ellipse([0, 0, 299, 299], fill=255)
+    ring = Image.new("RGBA", (312, 312), (0, 0, 0, 0))
+    ImageDraw.Draw(ring).ellipse([0, 0, 311, 311], fill=(255, 255, 255, 255))
+    chk.paste(ring, (44, 344), ring)
+    chk.paste(av, (50, 350), m)
+    return chk.convert("RGB")
+
+
+def note_check(im):
+    W, H = im.size
+    top = (H - 324) // 2
+    chk = im.copy().convert("RGBA")
+    ov = Image.new("RGBA", chk.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(ov)
+    od.rectangle([0, 0, W, top], fill=(0, 0, 0, 90))
+    od.rectangle([0, top + 324, W, H], fill=(0, 0, 0, 90))
+    od.rectangle([(W - 1100) // 2, top, (W + 1100) // 2, top + 324], outline=(255, 0, 0, 200), width=4)
+    return Image.alpha_composite(chk, ov).convert("RGB")
+
+
+def build_layouts():
+    fb = ImageFont.truetype(FB, 22, index=0)
+    sheet = Image.new("RGB", (1540, 2 * (500 // 2 + 330 // 2 + 120) + 20), "white")
+    d = ImageDraw.Draw(sheet)
+    y = 10
+    for key, L in LAYOUTS.items():
+        x = simple(1500, 500, 900, 245, "在宅ワーク道具箱", L["line"], 100, L["ratio"])
+        n = simple(1920, 1006, 960, 503, "在宅ワーク道具箱", L["line"], 92, L["ratio"])
+        x.save(OUT / f"x-header-{key}-1500x500.png")
+        n.save(OUT / f"note-header-{key}-1920x1006.png")
+        xc, nc = x_check(x), note_check(n)
+        xc.save(OUT / f"x-header-{key}-check.png")
+        nc.save(OUT / f"note-header-{key}-check.png")
+        d.text((10, y), f"{key}：{L['name']}（上：X／下：noteの表示される帯）", font=fb, fill="#222")
+        y += 34
+        sheet.paste(xc.resize((750, 250), Image.LANCZOS), (10, y))
+        top = (1006 - 324) // 2
+        band = n.crop((0, top, 1920, top + 324)).resize((1500 // 2 + 0, round(324 * 750 / 1920)), Image.LANCZOS)
+        sheet.paste(band, (10, y + 260))
+        # スマホ幅の目安（幅360pxに縮小したXヘッダー）
+        sheet.paste(x.resize((360, 120), Image.LANCZOS), (780, y))
+        d.text((780, y + 125), "Xをスマホ幅（360px）に縮小", font=ImageFont.truetype(FM, 14, index=0), fill="#555")
+        y += 260 + round(324 * 750 / 1920) + 40
+    sheet = sheet.crop((0, 0, 1540, y))
+    sheet.save(OUT / "headers-L1-L2-compare.png")
+
+
 if __name__ == "__main__":
-    x_header()
-    note_header()
+    build_layouts()
     print("ok", [p.name for p in OUT.iterdir()])
