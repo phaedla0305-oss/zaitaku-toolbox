@@ -44,6 +44,18 @@ def _post_x(text: str) -> str:
     return str(client.create_tweet(text=text).data["id"])
 
 
+def pr_first(text: str, tags=("#PR", "#広告")) -> str:
+    """広告であることを最初に分かるようにする：文中・文末の #PR / #広告 を外し、先頭に【PR】を付ける。
+    （ステマ規制への対応。表示位置を本文の最後から先頭へ移すだけで、本文は変えない）"""
+    import re
+
+    body = text.strip()
+    if body.startswith("【PR】"):
+        return body
+    for t in tags:
+        body = re.sub(r"\s*" + re.escape(t) + r"(?![\w])", "", body)
+    return "【PR】" + body.strip()
+
 
 
 def _jst_today() -> str:
@@ -95,7 +107,7 @@ def run(max_posts: int = 1) -> int:
     for it in items:
         n, slug = it["n"], it["slug"]
         url = f"{base}/articles/{slug}.html?utm_source=x&utm_medium=social&utm_campaign={slug}&utm_content=v{n + 1}"
-        text = it["posts"][n] + "\n" + url
+        text = pr_first(it["posts"][n]) + "\n" + url
         if live and state["posted_today"] < max_posts:
             pid = _post_x(text)
             print(f"[販売] X に投稿: {slug} v{n + 1} (id={pid})")
