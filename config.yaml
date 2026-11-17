@@ -9,6 +9,25 @@ site:
   # Google Search Console の所有権確認コード（「HTMLタグ」方式の content="..." の中身）
   gsc_verification: ""
   author: "編集部"
+  # トップページの「目的から探す」（読者の目的ごとに入口を分ける。記事は slug で指定）
+  entry_points:
+    - title: "自宅のネット回線を決めたい"
+      note: "光回線・ホームルーター・引っ越し時のつなぎ回線"
+      slugs: ["zaitaku-home-router-erabikata", "moving-fiber-waiting-telework-internet"]
+    - title: "会社のVPN・取引先のIP制限につながらない"
+      note: "帰省先からの接続・固定IPが必要かの判断"
+      slugs: ["kisei-telework-ip-seigen-checklist", "freelance-kotei-ip-hitsuyou-mail-template", "sekai-vpn-myip-difference"]
+    - title: "外で作業するときの通信が不安"
+      note: "カフェなどのフリーWi-Fi"
+      slugs: ["cafe-free-wifi-safety-vpn"]
+  # 記事末の「次に読むなら」（読者の次の疑問に合う記事だけを手で選ぶ。指定がない記事は同じ案件の新しい記事）
+  related:
+    cafe-free-wifi-safety-vpn: ["sekai-vpn-myip-difference", "kisei-telework-ip-seigen-checklist"]
+    kisei-telework-ip-seigen-checklist: ["sekai-vpn-myip-difference", "moving-fiber-waiting-telework-internet"]
+    freelance-kotei-ip-hitsuyou-mail-template: ["sekai-vpn-myip-difference", "kisei-telework-ip-seigen-checklist"]
+    zaitaku-home-router-erabikata: ["moving-fiber-waiting-telework-internet"]
+    moving-fiber-waiting-telework-internet: ["zaitaku-home-router-erabikata", "kisei-telework-ip-seigen-checklist"]
+    sekai-vpn-myip-difference: ["freelance-kotei-ip-hitsuyou-mail-template", "cafe-free-wifi-safety-vpn"]
 
 # 収益目標（週次レポートで達成に必要な数字を逆算する）
 goal:
