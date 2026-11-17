@@ -30,6 +30,13 @@ https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/freelance-kotei-ip-hi
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/kisei-telework-ip-seigen-checklist.html?utm_source=x&utm_medium=social&utm_campaign=kisei-telework-ip-seigen-checklist&utm_content=v2
 ```
 
+## sekai-vpn-myip-difference（案 v3）
+
+```
+【PR】共用IPでIP制限に入れず作業止まった…そんな遠回りを避けるための『セカイVPN/マイIPの違い』を先に確認。
+https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-difference.html?utm_source=x&utm_medium=social&utm_campaign=sekai-vpn-myip-difference&utm_content=v3
+```
+
 ## cafe-free-wifi-safety-vpn（案 v5）
 
 ```
