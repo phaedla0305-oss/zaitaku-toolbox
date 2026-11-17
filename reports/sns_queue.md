@@ -1,13 +1,6 @@
-# SNS 投稿キュー（2026-11-16）
+# SNS 投稿キュー（2026-11-17）
 
 手動投稿する場合はコピーして使ってください。
-
-## sekai-vpn-myip-difference（案 v2）
-
-```
-【PR】申し込み前チェック3点：①固定IPが本当に必要？②取引先にIP登録OKか確認③会社規程の許可。用途別フローつき。
-https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-difference.html?utm_source=x&utm_medium=social&utm_campaign=sekai-vpn-myip-difference&utm_content=v2
-```
 
 ## moving-fiber-waiting-telework-internet（案 v2）
 
