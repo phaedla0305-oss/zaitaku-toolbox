@@ -82,7 +82,12 @@ def _aff_links(body_md: str, slug: str) -> str:
     return re.sub(r"\[\[aff:([a-zA-Z0-9_-]+)(?:\|([^\]]+))?\]\]", repl, body_md)
 
 
-def _related(me: dict, all_articles: list[dict], n: int = 3) -> str:
+def _related(me: dict, all_articles: list[dict], n: int = 3, curated: dict | None = None) -> str:
+    by_slug = {a["slug"]: a for a in all_articles}
+    chosen = [by_slug[s] for s in (curated or {}).get(me["slug"], []) if s in by_slug and s != me["slug"]]
+    if chosen:  # 手で選んだ「次に読むなら」を優先（読者の次の疑問に合う記事だけ）
+        items = "".join(f'<li><a href="{a["slug"]}.html">{html.escape(a["title"])}</a></li>' for a in chosen)
+        return f'<nav class="related"><p>次に読むなら</p><ul>{items}</ul></nav>'
     others = [a for a in all_articles if a["slug"] != me["slug"]]
     others.sort(key=lambda a: a["date"], reverse=True)  # 新しい順
     others.sort(key=lambda a: a["program_id"] != me["program_id"])  # 同じ案件の記事を優先（安定ソート）
@@ -130,7 +135,7 @@ def run() -> int:
         updated = f" ／ 更新 {a['updated']}" if a["updated"] != a["date"] else ""
         page = (f"<h1>{html.escape(a['title'])}</h1>"
                 f"<p class=\"meta\">公開 {a['date']}{updated} ／ {html.escape(s.get('author', ''))}</p>"
-                f"{toc}{body_html}{_related(a, articles)}")
+                f"{toc}{body_html}{_related(a, articles, curated=s.get('related'))}")
         write_text(SITE_DIR / "articles" / f"{a['slug']}.html",
                    _page(cfg, f"{a['title']}｜{s['name']}", a["desc"], page, "../",
                          path=f"articles/{a['slug']}.html", og_type="article", jsonld=jsonld))
@@ -162,8 +167,17 @@ def run() -> int:
                     for a in sorted(articles, key=lambda a: a["date"], reverse=True))
     site_ld = [{"@context": "https://schema.org", "@type": "WebSite", "name": s["name"], "url": f"{base}/", "inLanguage": "ja"}]
     intro = f"<p>{html.escape(cfg['niche'])}を、公式情報と仕様をもとに比較・解説します。</p>"
+    by_slug = {a["slug"]: a for a in articles}
+    entries = ""
+    for ep in s.get("entry_points", []):  # 目的から探す（読者が自分に合う記事を選べるように）
+        links = "".join(f'<li><a href="articles/{sl}.html">{html.escape(by_slug[sl]["title"])}</a></li>'
+                        for sl in ep.get("slugs", []) if sl in by_slug)
+        if links:
+            entries += (f'<div class="related"><p>{html.escape(ep["title"])}</p>'
+                        f'<div class="meta">{html.escape(ep.get("note", ""))}</div><ul>{links}</ul></div>')
+    entry_html = f"<h2>目的から探す</h2>{entries}" if entries else ""
     write_text(SITE_DIR / "index.html", _page(cfg, f"{s['name']}｜{cfg['niche']}", f"{cfg['niche']}を、公式情報と仕様をもとに解説するサイトです。",
-                                              f"<h1>{name}</h1>{intro}<h2>新着記事</h2><ul class=\"list\">{items}</ul>", "", jsonld=site_ld))
+                                              f"<h1>{name}</h1>{intro}{entry_html}<h2>新着記事</h2><ul class=\"list\">{items}</ul>", "", jsonld=site_ld))
 
     urls = f"<url><loc>{base}/</loc></url>" + "".join(
         f"<url><loc>{base}/articles/{a['slug']}.html</loc><lastmod>{a['updated']}</lastmod></url>" for a in articles)
