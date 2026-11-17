@@ -272,7 +272,7 @@ VPNサービス経由のIPアドレスでのご登録が、貴社のセキュリ
 
 取引先から固定IPでの登録を求められ、作業場所が自宅以外にも広がる場合は、マイIPも選択肢の1つです。料金・無料体験の条件・同時接続の扱い・解約方法を公式サイトで確認してから、申し込むかどうかを決めてください：[[aff:myip|マイIP公式サイトで最新の料金・無料体験の条件を確認する]]
 
-<p class="next">帰省先や出張先から取引先の環境に入る予定がある人は「<a href="kisei-telework-ip-seigen-checklist.html">帰省先テレワークでIP制限に入れない？出発前チェックリスト</a>」、カフェなどで作業する人は「<a href="cafe-free-wifi-safety-vpn.html">カフェのフリーWi-Fiは危険？</a>」も参考にしてください。</p>
+<p class="next">帰省先や出張先から取引先の環境に入る予定がある人は「<a href="kisei-telework-ip-seigen-checklist.html">帰省先のテレワークで社内ツールに入れない？IP制限の確認と出発前の準備</a>」、カフェなどで作業する人は「<a href="cafe-free-wifi-safety-vpn.html">カフェのフリーWi-Fiは危険？</a>」も参考にしてください。</p>
 
 <p class="next">固定IPを用意すると決めた人で、同じ会社の「セカイVPN」とどちらにするか迷っている場合は、「<a href="sekai-vpn-myip-difference.html">セカイVPNとマイIPの違い 用途別の選び方と不要な人</a>」で、固定IPと共有IPの違いを確認できます（取引先に登録するIPには固定IPが必要です）。</p>
 
