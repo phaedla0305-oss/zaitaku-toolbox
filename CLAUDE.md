@@ -18,6 +18,7 @@
 - 効果の断定、根拠のない No.1・最安・100% は使わない（`config.yaml` の `compliance.ng_patterns`）
 - 体験談は捏造しない。確認できない事実は `<!-- 要確認: ... -->` で残す
 - 修正後は `python -m affteam check --slug <slug>` を通す
+- 記事を直したら、チェック結果の「未投稿のX文面」（レポート末尾、PRでは Actions の Summary）を見て、項目数・仕様・用語が記事とずれていれば `content/sns/<slug>.json` の未投稿分も直す（`affteam/sns_sync.py` が数・体験風の言い回し・使わない用語を warn で出す）
 
 ## 主なコマンド
 - `python -m affteam --dry-run all` … API を使わず全工程を通す

@@ -5,8 +5,10 @@ critical が1件でもあれば終了コード1（CI を失敗させ、公開を
 from __future__ import annotations
 
 import json
+import os
 import re
 
+from . import sns_sync
 from .config import ARTICLES_DIR, REPORTS_DIR, SNS_DIR, load_config, parse_front_matter, program_by_id, render, write_text
 from .llm import claude, extract_json
 
@@ -41,6 +43,8 @@ def check_article(slug: str, cfg: dict, use_ai: bool = True) -> list[dict]:
         for post in sns.get("x_posts", []):
             if not any(t in post for t in cfg["compliance"]["sns_tags"]):
                 issues.append({"severity": "critical", "quote": post[:40], "reason": "SNS投稿に #PR / #広告 がない（ステマ規制）", "where": "SNS"})
+    # 記事と未投稿のX文面の照合（数・用語・体験風の言い回し）。warn のみで公開は止めない
+    issues += sns_sync.review(slug)
 
     if use_ai:
         review = extract_json(claude(
@@ -56,6 +60,26 @@ def check_article(slug: str, cfg: dict, use_ai: bool = True) -> list[dict]:
     return issues
 
 
+def _summary(slug: str, issues: list[dict]) -> None:
+    """GitHub Actions の実行結果ページ（Summary）に、未投稿X文面の照合結果を書く。
+
+    CHANGED_SLUGS（PRで変わった記事）は、指摘がなくても未投稿の文面を一覧にする。
+    それ以外の記事は、X文面の指摘があるときだけ書く。"""
+    out = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not out:
+        return
+    changed = set(os.environ.get("CHANGED_SLUGS", "").split())
+    sns = [i for i in issues if str(i.get("where", "")).startswith("X文面")]
+    if slug not in changed and not sns:
+        return
+    lines = [f"### {slug}" + ("（このPRで変更）" if slug in changed else ""), ""]
+    lines += [f"- ⚠ {i['where']}「{i['quote']}」: {i['reason']}" for i in sns] or ["- X文面の指摘なし"]
+    if slug in changed:
+        lines += ["", "未投稿の文面（記事の項目数・仕様・用語と合っているか確認）:", ""] + sns_sync.listing(slug)
+    with open(out, "a", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n\n")
+
+
 def run(slugs: list[str] | None = None, use_ai: bool = True) -> int:
     cfg = load_config()
     slugs = slugs or [p.stem for p in sorted(ARTICLES_DIR.glob("*.md"))]
@@ -66,7 +90,9 @@ def run(slugs: list[str] | None = None, use_ai: bool = True) -> int:
         lines = [f"# 法令・規約チェック: {slug}", "", f"判定: **{'NG（要修正）' if crit else 'OK'}**", ""]
         lines += [f"- [{i['severity']}] {i['where']}「{i.get('quote', '')}」: {i['reason']}"
                   + (f" → {i['suggestion']}" if i.get("suggestion") else "") for i in issues] or ["- 指摘なし"]
+        lines += ["", "## 未投稿のX文面（記事の項目数・仕様・用語と照合する）", ""] + sns_sync.listing(slug)
         write_text(REPORTS_DIR / "compliance" / f"{slug}.md", "\n".join(lines) + "\n")
+        _summary(slug, issues)
         write_text(REPORTS_DIR / "compliance" / f"{slug}.json", json.dumps(issues, ensure_ascii=False, indent=2))
         print(f"[チェック] {slug}: critical {len(crit)} / 全 {len(issues)} 件")
         if crit:
