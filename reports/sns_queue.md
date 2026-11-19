@@ -5,14 +5,14 @@
 ## zaitaku-home-router-erabikata（案 v2）
 
 ```
-【PR】Web会議の準備、速度測定の数字だけで判断していませんか？記事に、運営者の自宅の光回線での測定例と、会社のルール確認から事前テストまでの手順を追加しました。
+【PR】Web会議の準備、速度測定の数字だけで判断していませんか？運営者の自宅の光回線での測定例（ホームルーターの実測ではありません）と、自分の回線を確かめる手順をまとめました。
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/zaitaku-home-router-erabikata.html?utm_source=x&utm_medium=social&utm_campaign=zaitaku-home-router-erabikata&utm_content=v2
 ```
 
 ## freelance-kotei-ip-hitsuyou-mail-template（案 v2）
 
 ```
-【PR】5項目チェックで要否判定＋代替4案比較＋メール例文3つ。まずは取引先と接続方法をすり合わせ。
+【PR】固定IPが要るかのチェックリスト、取引先のVPNなど固定IP以外の方法との比較、そのまま使えるメール例文3つ。まずは取引先と接続方法を相談するところから。
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/freelance-kotei-ip-hitsuyou-mail-template.html?utm_source=x&utm_medium=social&utm_campaign=freelance-kotei-ip-hitsuyou-mail-template&utm_content=v2
 ```
 
