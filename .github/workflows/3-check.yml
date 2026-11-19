@@ -8,8 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - uses: actions/setup-python@v5
         with: { python-version: "3.12", cache: pip }
       - run: pip install -r requirements.txt
+      - name: 変更された記事を調べる（未投稿X文面の照合に使う）
+        run: |
+          slugs=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" \
+            | sed -n -E 's#^content/(articles|sns)/([^/]+)\.(md|json)$#\2#p' | sort -u | tr '\n' ' ')
+          echo "CHANGED_SLUGS=$slugs" >> "$GITHUB_ENV"
+          echo "変更された記事: $slugs"
       - run: python -m affteam check --no-ai
       - run: python -m affteam build
