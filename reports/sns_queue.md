@@ -1,4 +1,4 @@
-# SNS 投稿キュー（2026-11-18）
+# SNS 投稿キュー（2026-11-19）
 
 手動投稿する場合はコピーして使ってください。
 
@@ -19,21 +19,21 @@ https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/freelance-kotei-ip-hi
 ## kisei-telework-ip-seigen-checklist（案 v2）
 
 ```
-【PR】帰省前チェック5点: 1社内規程 2情シス確認メール 3支給VPNを自宅外で試す 4テザリング/公衆Wi‑Fiの注意 5当日連絡フロー
+【PR】帰省前に確かめる4つ：①会社のルールを情シスに聞く ②会社のVPNを自宅以外の回線で試す ③帰省先の回線を確認 ④固定IPが要るか判断。当日つながらないときの手順も
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/kisei-telework-ip-seigen-checklist.html?utm_source=x&utm_medium=social&utm_campaign=kisei-telework-ip-seigen-checklist&utm_content=v2
 ```
 
 ## sekai-vpn-myip-difference（案 v3）
 
 ```
-【PR】共用IPでIP制限に入れず作業止まった…そんな遠回りを避けるための『セカイVPN/マイIPの違い』を先に確認。
+【PR】取引先に「接続元の固定IPを教えて」と言われたら。セカイVPNは共用IPなので、IP制限への登録には向きません。マイIPとの違いと、どちらも不要なケースを整理
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-difference.html?utm_source=x&utm_medium=social&utm_campaign=sekai-vpn-myip-difference&utm_content=v3
 ```
 
 ## moving-fiber-waiting-telework-internet（案 v3）
 
 ```
-【PR】テザリングで乗り切ろうとして発熱→会議が不安定に。期間とデータ量を先に見積もれば選択肢は変わります。4択比較と注意点を整理
+【PR】開通待ちをテザリングでしのぐなら、長い会議ではスマホの発熱と電池の減りに注意。在宅日数とデータ量を先に見積もると、4つの方法から選びやすくなります
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/moving-fiber-waiting-telework-internet.html?utm_source=x&utm_medium=social&utm_campaign=moving-fiber-waiting-telework-internet&utm_content=v3
 ```
 
