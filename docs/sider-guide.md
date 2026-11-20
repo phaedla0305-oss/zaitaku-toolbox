@@ -63,6 +63,15 @@ Siderの契約内容・残りのクレジットは未確認（運営者が確認
 3. 記事の途中で、読者が次に何をすればよいか分からなくなる箇所はあるか
 ```
 
+**S1に追加（2026-11-20）：記事②の参照URLの表示確認（1回だけ）**
+記事②が参照している Cisco のページは、11/20の自動取得で HTTP 403 だった（リンク切れとは断定しない）。S1を始める11/25に、運営者のChromeで1回だけ開いて確かめる。
+1. Chromeで https://www.cisco.com/c/ja_jp/td/docs/rt/wanaggregationinternetedgert/asr1000aggregationservsrt/cg/024/nat-xe-3s-asr1k-book/nat-xe-3s-asr1k-book_chapter_010.html を開く
+2. Siderに次の文を貼る
+```
+この公開ページの本文が読める場合はタイトルを短く要約してください。読めない場合は未確認とし、推測しないでください。
+```
+3. 返す結果：URL・確認日・本文を表示できたか（できた／できない）。Siderの答えだけを根拠にせず、Claude Code が記事②の参照箇所と照合する
+
 ### S2. 案件の公式ページの料金チェック（月1回、または料金変更に気づいたとき。1案件5分）
 1. 案件の公式ページを開く（マイIP：https://www.interlink.or.jp/service/myip/ 、ホームWi-Fi：https://gmobb.jp/gmohomewifi/ 、GMO光：https://gmobb.jp/service/gmohikari/ ）
 2. 下の文を貼って送る
