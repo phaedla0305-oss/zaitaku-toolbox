@@ -30,6 +30,13 @@ https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-differ
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/moving-fiber-waiting-telework-internet.html?utm_source=x&utm_medium=social&utm_campaign=moving-fiber-waiting-telework-internet&utm_content=v3
 ```
 
+## zaitaku-home-router-erabikata（案 v3）
+
+```
+【PR】回線の測定結果は、どんな条件で測ったかもセットで確認。自宅の光回線をWi-Fiで測った例と、自分の環境を確かめる手順を記事にまとめました。ホームルーターの実測ではありません。
+https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/zaitaku-home-router-erabikata.html?utm_source=x&utm_medium=social&utm_campaign=zaitaku-home-router-erabikata&utm_content=v3
+```
+
 ## cafe-free-wifi-safety-vpn（案 v5）
 
 ```
