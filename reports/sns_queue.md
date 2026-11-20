@@ -1,13 +1,6 @@
-# SNS 投稿キュー（2026-11-19）
+# SNS 投稿キュー（2026-11-20）
 
 手動投稿する場合はコピーして使ってください。
-
-## zaitaku-home-router-erabikata（案 v2）
-
-```
-【PR】Web会議の準備、速度測定の数字だけで判断していませんか？運営者の自宅の光回線での測定例（ホームルーターの実測ではありません）と、自分の回線を確かめる手順をまとめました。
-https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/zaitaku-home-router-erabikata.html?utm_source=x&utm_medium=social&utm_campaign=zaitaku-home-router-erabikata&utm_content=v2
-```
 
 ## freelance-kotei-ip-hitsuyou-mail-template（案 v2）
 
