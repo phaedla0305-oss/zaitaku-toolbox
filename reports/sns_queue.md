@@ -1,13 +1,6 @@
-# SNS 投稿キュー（2026-11-20）
+# SNS 投稿キュー（2026-11-21）
 
 手動投稿する場合はコピーして使ってください。
-
-## freelance-kotei-ip-hitsuyou-mail-template（案 v2）
-
-```
-【PR】固定IPが要るかのチェックリスト、取引先のVPNなど固定IP以外の方法との比較、そのまま使えるメール例文3つ。まずは取引先と接続方法を相談するところから。
-https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/freelance-kotei-ip-hitsuyou-mail-template.html?utm_source=x&utm_medium=social&utm_campaign=freelance-kotei-ip-hitsuyou-mail-template&utm_content=v2
-```
 
 ## kisei-telework-ip-seigen-checklist（案 v2）
 
