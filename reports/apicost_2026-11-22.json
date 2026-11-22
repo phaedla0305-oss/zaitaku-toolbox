@@ -1,0 +1,51 @@
+{
+  "status": "取得",
+  "steps": {
+    "調査・企画": {
+      "runs": 2,
+      "claude_calls": 0,
+      "chatgpt_calls": 0,
+      "input": 0,
+      "output": 0,
+      "search": 0,
+      "usd_estimate": 0.0
+    },
+    "制作・点検": {
+      "runs": 0,
+      "claude_calls": 0,
+      "chatgpt_calls": 0,
+      "input": 0,
+      "output": 0,
+      "search": 0,
+      "usd_estimate": 0.0
+    },
+    "効果測定": {
+      "runs": 1,
+      "claude_calls": 0,
+      "chatgpt_calls": 0,
+      "input": 0,
+      "output": 0,
+      "search": 0,
+      "usd_estimate": 0.0
+    },
+    "再チェック": {
+      "runs": 0,
+      "claude_calls": 0,
+      "chatgpt_calls": 0,
+      "input": 0,
+      "output": 0,
+      "search": 0,
+      "usd_estimate": 0.0
+    },
+    "SNS案": {
+      "runs": 0,
+      "claude_calls": 0,
+      "chatgpt_calls": 0,
+      "input": 0,
+      "output": 0,
+      "search": 0,
+      "usd_estimate": 0.0
+    }
+  },
+  "usd_estimate_total": 0.0
+}
