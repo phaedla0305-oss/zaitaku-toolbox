@@ -30,6 +30,13 @@ https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/zaitaku-home-router-e
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/freelance-kotei-ip-hitsuyou-mail-template.html?utm_source=x&utm_medium=social&utm_campaign=freelance-kotei-ip-hitsuyou-mail-template&utm_content=v3
 ```
 
+## kisei-telework-ip-seigen-checklist（案 v3）
+
+```
+【PR】帰省先から社内ツールにつなぐ予定があるなら、出発前に。会社のルールを情シスに聞く→会社のVPNをテザリングで試す→当日の連絡先を控える、の順で備える記事です。
+https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/kisei-telework-ip-seigen-checklist.html?utm_source=x&utm_medium=social&utm_campaign=kisei-telework-ip-seigen-checklist&utm_content=v3
+```
+
 ## cafe-free-wifi-safety-vpn（案 v5）
 
 ```
