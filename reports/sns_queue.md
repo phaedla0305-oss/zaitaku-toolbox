@@ -1,13 +1,6 @@
-# SNS 投稿キュー（2026-11-22）
+# SNS 投稿キュー（2026-11-23）
 
 手動投稿する場合はコピーして使ってください。
-
-## kisei-telework-ip-seigen-checklist（案 v2）
-
-```
-【PR】帰省前に確かめる4つ：①会社のルールを情シスに聞く ②会社のVPNを自宅以外の回線で試す ③帰省先の回線を確認 ④固定IPが要るか判断。当日つながらないときの手順も
-https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/kisei-telework-ip-seigen-checklist.html?utm_source=x&utm_medium=social&utm_campaign=kisei-telework-ip-seigen-checklist&utm_content=v2
-```
 
 ## sekai-vpn-myip-difference（案 v3）
 
