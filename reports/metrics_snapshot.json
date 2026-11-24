@@ -13,9 +13,15 @@
       }
     },
     "other_paths": {
-      "/": 3,
+      "localhost/": 3,
       "/zaitaku-toolbox/": 1
     },
+    "hosts": {
+      "localhost": 3,
+      "phaedla0305-oss.github.io": 1
+    },
+    "prod_host": "phaedla0305-oss.github.io",
+    "other_host_events": {},
     "ad_events": []
   },
   "search_console": {
