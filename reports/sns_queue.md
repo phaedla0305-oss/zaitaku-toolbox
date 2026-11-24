@@ -30,6 +30,13 @@ https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/freelance-kotei-ip-hi
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/kisei-telework-ip-seigen-checklist.html?utm_source=x&utm_medium=social&utm_campaign=kisei-telework-ip-seigen-checklist&utm_content=v3
 ```
 
+## sekai-vpn-myip-difference（案 v4）
+
+```
+【PR】IP制限を通したい？それとも国を選んで接続したい？用途別にどっちか分かる比較と不要ケースをまとめました。
+https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-difference.html?utm_source=x&utm_medium=social&utm_campaign=sekai-vpn-myip-difference&utm_content=v4
+```
+
 ## cafe-free-wifi-safety-vpn（案 v5）
 
 ```
