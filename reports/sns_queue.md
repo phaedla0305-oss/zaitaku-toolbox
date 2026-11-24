@@ -1,13 +1,6 @@
-# SNS 投稿キュー（2026-11-23）
+# SNS 投稿キュー（2026-11-24）
 
 手動投稿する場合はコピーして使ってください。
-
-## sekai-vpn-myip-difference（案 v3）
-
-```
-【PR】取引先に「接続元の固定IPを教えて」と言われたら。セカイVPNは共用IPなので、IP制限への登録には向きません。マイIPとの違いと、どちらも不要なケースを整理
-https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-difference.html?utm_source=x&utm_medium=social&utm_campaign=sekai-vpn-myip-difference&utm_content=v3
-```
 
 ## moving-fiber-waiting-telework-internet（案 v3）
 
