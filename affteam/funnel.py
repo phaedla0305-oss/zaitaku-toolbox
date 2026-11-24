@@ -63,7 +63,11 @@ def build(snap: dict) -> dict:
     pending = (a8.get("pending_conversions"), a8.get("pending_revenue")) if ok else (None, None)
     return {"period": snap["period"], "sources": {k: snap[k]["status"] for k in ("ga4", "search_console", "a8")},
             "rows": rows, "revenue": revenue, "conversions": conversions,
-            "pending_conversions": pending[0], "pending_revenue": pending[1]}
+            "pending_conversions": pending[0], "pending_revenue": pending[1],
+            # 記事以外のページの表示と、計測した場所（ホスト名）。計測の点検用（記事の評価には使わない）
+            "other_pages": g.get("other_paths") if ga_ok else None,
+            "hosts": g.get("hosts") if ga_ok else None, "prod_host": g.get("prod_host") if ga_ok else None,
+            "other_host_events": g.get("other_host_events") if ga_ok else None}
 
 
 def _title_ideas(slug: str) -> list[str]:
@@ -137,6 +141,35 @@ def markdown(f: dict, cands: list[dict]) -> str:
     lines += ["", "### 記事表示の流入元（GA4の既定チャネル）", "",
               ("、".join(f"{ch} {v}回" for ch, v in sorted(srcs.items(), key=lambda x: -x[1])) or
                ("データなし" if f["sources"]["ga4"] == "取得" else "未取得"))]
+    # 記事以外のページの表示と、計測した場所（計測の点検用。記事の評価には使わない）
+    ga_ok = f["sources"]["ga4"] == "取得"
+    other = f.get("other_pages")
+    lines += ["", "### 記事以外のページの表示（GA4・計測の点検用）", ""]
+    if not ga_ok or other is None:
+        lines.append("未取得")
+    elif not other:
+        lines.append("なし")
+    else:
+        lines += ["| ページ | 表示 |", "|---|---|"]
+        lines += [f"| {k} | {v:,} |" for k, v in sorted(other.items(), key=lambda x: -x[1])[:10]]
+        if len(other) > 10:
+            lines.append(f"（ほか {len(other) - 10} 件）")
+    hosts = f.get("hosts")
+    lines += ["", "### 計測した場所（ホスト名）", ""]
+    if not ga_ok or hosts is None:
+        lines.append("未取得")
+    elif not hosts:
+        lines.append("なし")
+    else:
+        prod = f.get("prod_host") or ""
+        lines += ["| ホスト名 | 表示 | 扱い |", "|---|---|---|"]
+        lines += [f"| {h} | {v:,} | {'本番（記事の数に入れる）' if h == prod else '本番以外（記事の数に入れない）'} |"
+                  for h, v in sorted(hosts.items(), key=lambda x: -x[1])]
+        ohe = f.get("other_host_events") or {}
+        if ohe:
+            lines.append("")
+            lines.append("本番以外のホストの広告イベント（記事の数に入れない）：" +
+                         "、".join(f"{k.replace('|', ' ')} {v}件" for k, v in ohe.items()))
     # 観測中の検索語（data/watch_queries.json）。少ないうちは記事を変えず、推移だけを見る
     import json as _json
     wpath = ARTICLES_DIR.parent.parent / "data" / "watch_queries.json"

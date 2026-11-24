@@ -53,32 +53,41 @@ def ga4(start: str, end: str) -> dict:
             return [([v.value for v in r.dimension_values], [float(v.value or 0) for v in r.metric_values])
                     for r in client.run_report(req).rows]
 
-        pages, other_paths = {}, {}
-        for (path,), (pv, users) in run(["pagePath"], ["screenPageViews", "totalUsers"]):
+        # 本番のホスト名（例：phaedla0305-oss.github.io）。ほかのホスト（手元の確認用サーバーなど）は記事の数に入れない
+        prod = urllib.parse.urlparse(load_config()["site"]["url"]).hostname or ""
+        pages, other_paths, hosts = {}, {}, {}
+        for (host, path), (pv, users) in run(["hostName", "pagePath"], ["screenPageViews", "totalUsers"]):
+            hosts[host] = hosts.get(host, 0) + int(pv)
             s = _slug(path)
-            if s and "/zaitaku-toolbox/" in path:
+            if host == prod and s and "/zaitaku-toolbox/" in path:
                 p = pages.setdefault(s, {"pageviews": 0, "users": 0})
                 p["pageviews"] += int(pv)
                 p["users"] += int(users)  # パスごとの利用者数の合計（同じ人が複数パスにいると重複しうる）
             else:
-                other_paths[path] = int(pv)  # トップ・旧URL・中継ページなど
+                key = path if host == prod else f"{host}{path}"
+                other_paths[key] = other_paths.get(key, 0) + int(pv)  # トップ・旧URL・中継ページ・本番以外のホストなど
         # 流入元（GA4 の既定チャネル：Organic Search／Direct／Organic Social など）を記事ごとに
-        for (path, ch), (pv,) in run(["pagePath", "sessionDefaultChannelGroup"], ["screenPageViews"]):
+        for (host, path, ch), (pv,) in run(["hostName", "pagePath", "sessionDefaultChannelGroup"], ["screenPageViews"]):
             s = _slug(path)
-            if s and "/zaitaku-toolbox/" in path and s in pages:
+            if host == prod and s and "/zaitaku-toolbox/" in path and s in pages:
                 src = pages[s].setdefault("sources", {})
                 src[ch] = src.get(ch, 0) + int(pv)
-        clicks = {}
+        clicks, other_host_events = {}, {}
         for event in ("affiliate_click", "affiliate_redirect"):
-            for (article, pid), (cnt, users) in run(["customEvent:article", "customEvent:program_id"],
-                                                    ["eventCount", "totalUsers"], event=event):
+            for (host, article, pid), (cnt, users) in run(["hostName", "customEvent:article", "customEvent:program_id"],
+                                                          ["eventCount", "totalUsers"], event=event):
+                if host != prod:  # 本番以外のホストのイベントは別枠
+                    k = f"{host}|{event}"
+                    other_host_events[k] = other_host_events.get(k, 0) + int(cnt)
+                    continue
                 c = clicks.setdefault(f"{article}|{pid}", {"article": article, "program_id": pid,
                                                              "affiliate_click": 0, "affiliate_click_users": 0,
                                                              "affiliate_redirect": 0})
                 c[event] += int(cnt)
                 if event == "affiliate_click":
                     c["affiliate_click_users"] += int(users)
-        return {"status": "取得", "pages": pages, "other_paths": other_paths, "ad_events": list(clicks.values())}
+        return {"status": "取得", "pages": pages, "other_paths": other_paths, "hosts": hosts, "prod_host": prod,
+                "other_host_events": other_host_events, "ad_events": list(clicks.values())}
     except Exception as e:  # 権限・API無効などはそのまま理由を返す
         return {"status": f"未取得（{type(e).__name__}: {str(e)[:200]}）"}
 
