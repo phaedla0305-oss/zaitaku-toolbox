@@ -11,9 +11,10 @@ permissions:
   id-token: write
 concurrency: { group: pages, cancel-in-progress: true }
 jobs:
-  deploy:
+  # サイトを作ってアップロードするジョブと、公開するジョブを分ける（GitHub公式の標準の形）。
+  # 同じジョブ内でアップロード直後に公開すると「No artifacts named github-pages」で失敗することがある（2026-11-25 発生）
+  build:
     runs-on: ubuntu-latest
-    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,5 +25,10 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: _site }
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
+    steps:
       - id: d
         uses: actions/deploy-pages@v4
