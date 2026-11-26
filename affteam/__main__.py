@@ -45,6 +45,8 @@ def main() -> int:
     mt = sub.add_parser("metrics", help="GA4・Search Console・A8の数字を取得（Claude APIは使わない）")
     mt.add_argument("--days", type=int, default=28)
     mt.add_argument("--include-today", action="store_true")
+    cs = sub.add_parser("chatgpt-share", help="共有プロンプトをChatGPT（API）に送り、回答をIssueに残す")
+    cs.add_argument("--file", required=True)
     sub.add_parser("all")
     args = ap.parse_args()
     if args.dry_run:
@@ -64,6 +66,9 @@ def main() -> int:
         if not (args.issue or args.plan):
             ap.error("--issue か --plan を指定してください")
         produce.run(plan_path=args.plan, issue=args.issue)
+    elif args.cmd == "chatgpt-share":
+        from . import chatgpt_share
+        sys.exit(chatgpt_share.run(args.file))
     elif args.cmd == "check":
         return compliance.run(args.slug, use_ai=not args.no_ai)
     elif args.cmd == "gate":

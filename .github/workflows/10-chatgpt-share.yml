@@ -1,0 +1,49 @@
+# ⑩ ChatGPTとの共有（チームの自走化 段階1、2026-11-26 運営者承認）
+# 共有プロンプト（docs/chatgpt-briefing-*.md）が main に入ったら、ChatGPT（API）に送り、回答を Issue「ChatGPTとの共有（自動）」に残す
+name: 10. ChatGPTとの共有
+on:
+  push:
+    branches: [main]
+    paths: ["docs/chatgpt-briefing-*.md"]
+  workflow_dispatch:
+    inputs:
+      file:
+        description: "送る共有プロンプトのファイル（例：docs/chatgpt-briefing-2026-11-26.md）"
+        required: true
+permissions:
+  contents: write
+  issues: write
+concurrency: { group: chatgpt-share, cancel-in-progress: false }
+jobs:
+  share:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip }
+      - run: pip install -r requirements.txt
+      - name: 送るファイルを決める
+        id: files
+        run: |
+          if [ -n "${{ github.event.inputs.file }}" ]; then
+            files="${{ github.event.inputs.file }}"
+          else
+            files=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- 'docs/chatgpt-briefing-*.md' | tr '\n' ' ')
+          fi
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+          echo "送るファイル: $files"
+      - name: ChatGPTに送ってIssueに記録
+        if: steps.files.outputs.files != ''
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          AFF_MAX_API_CALLS: "3"
+        run: |
+          for f in ${{ steps.files.outputs.files }}; do python -m affteam chatgpt-share --file "$f"; done
+      - name: 回答を保存
+        if: steps.files.outputs.files != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/chatgpt && git commit -m "ChatGPTの回答 $(date +%F)" && { for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done; } || echo "変更なし（または送信失敗）"

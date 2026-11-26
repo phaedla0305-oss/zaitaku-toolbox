@@ -112,6 +112,9 @@ def chatgpt(system: str, prompt: str, *, stub: str = "") -> str:
     _count_call("ChatGPT")
     client = OpenAI()  # OPENAI_API_KEY を環境変数から読む
     resp = client.responses.create(model=OPENAI_MODEL, instructions=system, input=prompt)
+    u = getattr(resp, "usage", None)
+    if u:
+        print(f"[API] ChatGPT 使用トークン: 入力 {getattr(u, 'input_tokens', 0)} / 出力 {getattr(u, 'output_tokens', 0)}")
     return resp.output_text
 
 
