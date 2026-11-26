@@ -9,13 +9,6 @@
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/zaitaku-home-router-erabikata.html?utm_source=x&utm_medium=social&utm_campaign=zaitaku-home-router-erabikata&utm_content=v3
 ```
 
-## freelance-kotei-ip-hitsuyou-mail-template（案 v3）
-
-```
-【PR】自宅回線のIPは、ルーターの再起動などで変わることがあります。登録したIPで入れなくなる前に、取引先と決めておくことと連絡の文面をまとめました。
-https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/freelance-kotei-ip-hitsuyou-mail-template.html?utm_source=x&utm_medium=social&utm_campaign=freelance-kotei-ip-hitsuyou-mail-template&utm_content=v3
-```
-
 ## kisei-telework-ip-seigen-checklist（案 v3）
 
 ```
@@ -23,11 +16,11 @@ https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/freelance-kotei-ip-hi
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/kisei-telework-ip-seigen-checklist.html?utm_source=x&utm_medium=social&utm_campaign=kisei-telework-ip-seigen-checklist&utm_content=v3
 ```
 
-## sekai-vpn-myip-difference（案 v4）
+## freelance-kotei-ip-hitsuyou-mail-template（案 v3）
 
 ```
-【PR】IP制限を通したい？それとも国を選んで接続したい？用途別にどっちか分かる比較と不要ケースをまとめました。
-https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-difference.html?utm_source=x&utm_medium=social&utm_campaign=sekai-vpn-myip-difference&utm_content=v4
+【PR】自宅回線のIPは、ルーターの再起動などで変わることがあります。登録したIPで入れなくなる前に、取引先と決めておくことと連絡の文面をまとめました。
+https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/freelance-kotei-ip-hitsuyou-mail-template.html?utm_source=x&utm_medium=social&utm_campaign=freelance-kotei-ip-hitsuyou-mail-template&utm_content=v3
 ```
 
 ## moving-fiber-waiting-telework-internet（案 v4）
@@ -35,6 +28,13 @@ https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-differ
 ```
 【PR】光回線の工事日まで何日？開通後も予備回線として使う？期間と使い道から、テザリング/ホームルーター/コワーキング/出社寄せの選び方を整理
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/moving-fiber-waiting-telework-internet.html?utm_source=x&utm_medium=social&utm_campaign=moving-fiber-waiting-telework-internet&utm_content=v4
+```
+
+## sekai-vpn-myip-difference（案 v4）
+
+```
+【PR】IP制限を通したい？それとも国を選んで接続したい？用途別にどっちか分かる比較と不要ケースをまとめました。
+https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-difference.html?utm_source=x&utm_medium=social&utm_campaign=sekai-vpn-myip-difference&utm_content=v4
 ```
 
 ## cafe-free-wifi-safety-vpn（案 v5）
