@@ -118,6 +118,10 @@ def run() -> int:
         shutil.rmtree(SITE_DIR)
     write_text(SITE_DIR / "style.css", CSS)
     write_text(SITE_DIR / ".nojekyll", "")
+    # チーム稼働の観察画面（段階3）。検索除外・サイトからリンクしない・アクセス解析なし・サイトマップに入れない
+    team_tpl = ROOT / "affteam" / "templates" / "team.html"
+    if team_tpl.exists():
+        write_text(SITE_DIR / "team" / "index.html", team_tpl.read_text(encoding="utf-8"))
     img_src = ARTICLES_DIR.parent / "images"  # 記事で使う画像（content/images/ → _site/images/）
     if img_src.exists():
         shutil.copytree(img_src, SITE_DIR / "images")
