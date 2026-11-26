@@ -41,6 +41,17 @@ jobs:
           AFF_MAX_API_CALLS: "3"
         run: |
           for f in ${{ steps.files.outputs.files }}; do python -m affteam chatgpt-share --file "$f"; done
+      - name: GitHub上のClaude Codeに照合を頼む（段階2）
+        if: steps.files.outputs.files != '' && vars.AUTO_CLAUDE_REVIEW == 'true'
+        env:
+          # 運営者の権限のトークンでコメントする（github.token のコメントでは @claude の処理が起動しないため）
+          GH_TOKEN: ${{ secrets.AUTOMATION_TOKEN }}
+        run: |
+          num=$(gh issue list --label chatgpt --state open --json number,title -q '.[]|select(.title=="ChatGPTとの共有（自動）")|.number' | head -1)
+          for f in ${{ steps.files.outputs.files }}; do
+            n=$(basename "$f" .md)
+            gh issue comment "$num" --body "@claude reports/chatgpt/${n}.md にあるChatGPTの回答を、CLAUDE.md と docs/ の決まり・これまでの記録に照らして照合してください。採用するものだけを反映するブランチとPRを作り、採用しなかったものはこのIssueに理由を書いてください。広告リンク・料金・事実・設定（config.yaml・ワークフロー）は変更しないでください。PRはマージしないでください（マージは運営者が判断します）。"
+          done
       - name: 回答を保存
         if: steps.files.outputs.files != ''
         run: |
