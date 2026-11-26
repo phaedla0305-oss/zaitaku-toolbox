@@ -1,13 +1,6 @@
-# SNS 投稿キュー（2026-11-25）
+# SNS 投稿キュー（2026-11-26）
 
 手動投稿する場合はコピーして使ってください。
-
-## moving-fiber-waiting-telework-internet（案 v3）
-
-```
-【PR】開通待ちをテザリングでしのぐなら、長い会議ではスマホの発熱と電池の減りに注意。在宅日数とデータ量を先に見積もると、4つの方法から選びやすくなります
-https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/moving-fiber-waiting-telework-internet.html?utm_source=x&utm_medium=social&utm_campaign=moving-fiber-waiting-telework-internet&utm_content=v3
-```
 
 ## zaitaku-home-router-erabikata（案 v3）
 
