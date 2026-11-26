@@ -30,7 +30,7 @@
 | 段階 | 内容 | 費用 | 必要な承認 |
 |---|---|---|---|
 | 0 | 稼働の観察画面のサンプル（Claude の Artifact、実際の記録を再生） | 0 | ― 済み |
-| 1 | **ChatGPT との共有を自動に**：毎日のレポートができたら、Actions が OpenAI API でChatGPT に送り、返ってきたJSONを Issue のコメントに残す。運営者のコピペをなくす | OpenAI API（1回数セント程度の見込み。残高4.60ドルの範囲から） | 運営者の承認（新しい自動処理） |
+| 1 | **ChatGPT との共有を自動に**：共有プロンプトが main に入ると、Actions が OpenAI API でChatGPT に送り、回答を Issue #39 と reports/chatgpt/ に残す。運営者のコピペをなくす | OpenAI API（1回 入力約3千・出力約2.6千トークン） | **実施済み（11/26、PR #38）** |
 | 2 | **Claude Code が ChatGPT の回答を受けて動く**：Issue に `@claude` を付けると、Claude Code（GitHub上）が回答を読んで修正のPRを作る。Maxの利用枠で動かす | Max の範囲（API費用なし） | 運営者の承認（トークンの登録） |
 | 3 | **観察画面をライブに**：Actions が稼働の記録（JSON）を出し、GitHub Pages の非公開ページ（検索除外）で再生する。Artifact は外部のデータを読めないため、ライブ版は GitHub Pages に置く | 0 | 運営者の承認 |
 

@@ -13,6 +13,10 @@
 - 人に作業を頼むとき、Siderで済む読み取り作業（公開記事の点検、公式ページの料金抜き出し、検索結果の傾向メモ）は `docs/sider-guide.md` の S1〜S3 として指示に入れる
 - ログイン後の管理画面（A8・Search Console・X/noteの設定など）では使わせない。有料プランは運営者判断。Siderの答えは事実の根拠にせず、公式の原文で確かめる
 
+## ChatGPTとの共有（2026-11-26〜自動）
+- 共有プロンプト `docs/chatgpt-briefing-*.md` を main に入れると、Actions「10. ChatGPTとの共有」が ChatGPT（API）に送り、回答が Issue #39 と `reports/chatgpt/<ファイル名>.md/.json` に残る。作業を始めるときは `reports/chatgpt/` の新しい回答を読み、照合してから反映する
+- 運営者に「ChatGPTに貼ってください」と頼む必要はない（運営者が自分でも相談したいときは従来どおり貼ってよい）
+
 ## 記事を直すときのルール
 - 広告リンクは `[[aff:案件ID|文言]]` 形式。生のURLを書かない
 - 効果の断定、根拠のない No.1・最安・100% は使わない（`config.yaml` の `compliance.ng_patterns`）
