@@ -1,4 +1,5 @@
 # Issue・PR のコメントで @claude と書くと Claude Code が対応する（記事の手直し、企画の練り直しなど）
+# 2026-11-26〜：Claude Max の利用枠で動かす（チームの自走化 段階2）。API の従量課金は使わない
 name: Claude Code
 on:
   issue_comment:
@@ -12,10 +13,13 @@ permissions:
   id-token: write
 jobs:
   claude:
-    if: contains(github.event.comment.body, '@claude')
+    # リポジトリの持ち主・メンバー・共同作業者のコメントだけで動く（外部の人のコメントでは動かさない）
+    if: >-
+      contains(github.event.comment.body, '@claude') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
