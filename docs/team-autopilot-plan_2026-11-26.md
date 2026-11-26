@@ -31,7 +31,7 @@
 |---|---|---|---|
 | 0 | 稼働の観察画面のサンプル（Claude の Artifact、実際の記録を再生） | 0 | ― 済み |
 | 1 | **ChatGPT との共有を自動に**：共有プロンプトが main に入ると、Actions が OpenAI API でChatGPT に送り、回答を Issue #39 と reports/chatgpt/ に残す。運営者のコピペをなくす | OpenAI API（1回 入力約3千・出力約2.6千トークン） | **実施済み（11/26、PR #38）** |
-| 2 | **Claude Code が ChatGPT の回答を受けて動く**：Issue に `@claude` を付けると、Claude Code（GitHub上）が回答を読んで修正のPRを作る。Maxの利用枠で動かす | Max の範囲（API費用なし） | 運営者の承認（トークンの登録） |
+| 2 | **Claude Code が ChatGPT の回答を受けて動く**：回答を残したあと Issue #39 に `@claude` で照合を依頼し、GitHub上の Claude Code が採用分だけのPRを作る。Maxの利用枠で動く | Max の範囲（API費用なし） | **実施済み（11/26、PR #40）**。運営者がトークン登録（CLAUDE_CODE_OAUTH_TOKEN）とClaude GitHub Appの導入（zaitaku-toolboxのみ）を実施。読むだけの試しで動作を確認（約9秒）。リポジトリ変数 AUTO_CLAUDE_REVIEW=true で自動依頼をオン |
 | 3 | **観察画面をライブに**：Actions が稼働の記録（JSON）を出し、GitHub Pages の非公開ページ（検索除外）で再生する。Artifact は外部のデータを読めないため、ライブ版は GitHub Pages に置く | 0 | 運営者の承認 |
 
 - 守ること：公開（PRのマージ）・支出・権限の追加は、今までどおり運営者の判断。自走化しても、確認待ちのPRは自動でマージしない（今の自動マージは、チェックで指摘がない記事だけ）
