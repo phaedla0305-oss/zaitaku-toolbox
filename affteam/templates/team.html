@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>道具箱チームの稼働室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* チーム稼働の観察画面（ライブ版）。GitHub の公開APIを数分おきに読む。検索除外・サイトからはリンクしない・アクセス解析なし */
+:root{--paper:#FAF6EE;--card:#fff;--ink:#1d2430;--muted:#5d6672;--line:#e4dccd;--navy:#1F3A5F;--orange:#F28C28;--ok:#2E7D5B;--ng:#B83B2E;--run:#7a5ae0;
+  --display:"Zen Kaku Gothic New","Yu Gothic","Hiragino Sans",sans-serif;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--paper:#12161c;--card:#1a2028;--ink:#e9edf2;--muted:#9aa4b0;--line:#2b333d;--navy:#9cbbe3;--orange:#F5A04D;--ok:#5cc39a;--ng:#e07a6d;--run:#a993f0;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--display);line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{margin:0;font-size:clamp(1.4rem,3.2vw,2rem);font-weight:900;color:var(--navy)}
+h1 small{display:block;font-size:.8rem;font-weight:700;color:var(--muted);letter-spacing:.08em}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite}
+.live.err i{background:var(--ng);animation:none}
+@keyframes pulse{50%{opacity:.3}}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.stat b{display:block;font-size:1.1rem;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat span{font-size:.75rem;color:var(--muted)}
+.main{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}
+@media (max-width:820px){.main{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0}
+.panel h2{margin:0 0 8px;font-size:.85rem;color:var(--muted);letter-spacing:.08em}
+svg{width:100%;height:auto;display:block}
+.node rect{fill:var(--card);stroke:var(--line);stroke-width:1.5;transition:stroke .3s}
+.node text{fill:var(--ink);font-family:var(--display);font-size:13px;font-weight:700}
+.node .sub{fill:var(--muted);font-size:10px;font-weight:400}
+.node.hot rect{stroke:var(--orange);stroke-width:2.5}.node.ng rect{stroke:var(--ng);stroke-width:2.5}.node.busy rect{stroke:var(--run);stroke-width:2.5;stroke-dasharray:6 4}
+.edge{stroke:var(--line);stroke-width:2;fill:none}
+.edge-label{fill:var(--muted);font-size:9px}
+.packet{fill:var(--orange)}.packet.ng{fill:var(--ng)}.packet.data{fill:var(--navy)}
+ol.feed{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:460px;overflow:auto}
+ol.feed li{display:grid;grid-template-columns:auto 1fr;gap:8px;padding:6px 8px;border-radius:8px;background:var(--paper);font-size:.82rem;animation:in .35s ease}
+ol.feed time{font-family:var(--mono);font-size:.72rem;color:var(--muted);white-space:nowrap}
+ol.feed div{min-width:0;overflow-wrap:anywhere}
+.tag{display:inline-block;font-size:.68rem;font-weight:700;padding:0 6px;border-radius:999px;margin-right:4px;border:1px solid currentColor}
+.tag.claude{color:var(--orange)}.tag.gh{color:var(--navy)}.tag.ng{color:var(--ng)}.tag.ok{color:var(--ok)}.tag.run{color:var(--run)}.tag.gpt{color:var(--ok)}
+@keyframes in{from{transform:translateY(-4px);opacity:.4}to{transform:none;opacity:1}}
+.lane{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+@media (max-width:640px){.lane{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.stage{border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:.78rem;background:var(--paper);transition:background .3s,border-color .3s}
+.stage b{display:block;font-family:var(--mono);font-size:1rem;color:var(--navy)}
+.stage.hot{border-color:var(--orange)}.stage.ng{border-color:var(--ng)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.75rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+footer{font-size:.75rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1><small>在宅ワーク道具箱 ／ チームの動き</small>道具箱チームの稼働室</h1>
+    <span class="live" id="live"><i></i><span id="livetext">読み込み中…</span></span>
+  </header>
+  <section class="strip" aria-label="いまの状況">
+    <div class="stat"><span>最後の動き</span><b id="s-last">―</b></div>
+    <div class="stat"><span>今日のX投稿</span><b id="s-sns">―</b></div>
+    <div class="stat"><span>確認待ちのPR</span><b id="s-pr">―</b></div>
+    <div class="stat"><span>実行中</span><b id="s-run">―</b></div>
+    <div class="stat"><span>直近24時間の失敗</span><b id="s-ng">―</b></div>
+  </section>
+  <div class="main">
+    <section class="panel" aria-label="作業室の見取り図">
+      <h2>作業室</h2>
+      <svg id="room" viewBox="0 0 640 400" role="img" aria-label="運営者・ChatGPT・Claude Code・GitHub・サイト・X・A8 のつながり"></svg>
+      <div class="legend">
+        <span><i style="background:var(--orange)"></i>作業（コミット・PR・投稿）</span>
+        <span><i style="background:var(--navy)"></i>計測・回答</span>
+        <span><i style="background:var(--ng)"></i>失敗</span>
+        <span><i style="background:var(--run)"></i>実行中（点線の枠）</span>
+      </div>
+    </section>
+    <section class="panel" aria-label="出来事の記録">
+      <h2>出来事（新しい順）</h2>
+      <ol class="feed" id="feed"></ol>
+    </section>
+  </div>
+  <section class="panel" aria-label="工程">
+    <h2>工程（直近24時間の回数）</h2>
+    <div class="lane" id="lane"></div>
+  </section>
+  <footer>GitHub の公開情報（実行・コミット・PR・Issue #39）を数分おきに読み込んでいます。料金・残高・アクセス数は載せていません（日報で確認）。このページは検索に出ず、サイトからもリンクしていません。</footer>
+</div>
+<script>
+(function(){
+const REPO="phaedla0305-oss/zaitaku-toolbox", API="https://api.github.com/repos/"+REPO, POLL_MS=6*60*1000;
+const NS="http://www.w3.org/2000/svg", svg=document.getElementById("room");
+const NODES={op:{x:40,y:24,w:120,h:46,l:"運営者",s:"判断・マージ"},gpt:{x:480,y:24,w:130,h:46,l:"ChatGPT",s:"案出し・意見"},
+  cc:{x:255,y:120,w:140,h:52,l:"Claude Code",s:"編集長（Max）"},gh:{x:255,y:250,w:140,h:52,l:"GitHub",s:"Actions・PR"},
+  a8:{x:30,y:180,w:110,h:46,l:"A8.net",s:"広告・成果"},site:{x:40,y:330,w:130,h:46,l:"サイト",s:"記事"},
+  x:{x:480,y:330,w:120,h:46,l:"X",s:"@zaitaku_toolbox"},cop:{x:500,y:180,w:110,h:46,l:"Copilot",s:"待機中"}};
+const EDGES=[["op","cc","指示・承認"],["op","gh","マージ"],["cc","gh","コミット・PR"],["gh","site","公開"],["gh","x","SNS告知"],["site","a8","広告リンク"],["gh","gpt","共有・企画"],["gh","cop",""]];
+const c=k=>({x:NODES[k].x+NODES[k].w/2,y:NODES[k].y+NODES[k].h/2});
+const mk=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e};
+const paths={},nodeEls={};
+EDGES.forEach(([a,b,l])=>{const p=c(a),q=c(b);const path=mk("path",{d:`M${p.x},${p.y} L${q.x},${q.y}`,class:"edge"});svg.appendChild(path);paths[a+">"+b]=path;
+  if(l){const t=mk("text",{x:(p.x+q.x)/2+4,y:(p.y+q.y)/2-4,class:"edge-label"});t.textContent=l;svg.appendChild(t)}});
+for(const k in NODES){const n=NODES[k],g=mk("g",{class:"node"});g.appendChild(mk("rect",{x:n.x,y:n.y,width:n.w,height:n.h,rx:10}));
+  const t=mk("text",{x:n.x+12,y:n.y+21});t.textContent=n.l;g.appendChild(t);const s=mk("text",{x:n.x+12,y:n.y+37,class:"sub"});s.textContent=n.s;g.appendChild(s);svg.appendChild(g);nodeEls[k]=g}
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function flash(k,cls){cls=cls||"hot";const g=nodeEls[k];g.classList.add(cls);setTimeout(()=>g.classList.remove(cls),1000)}
+function send(a,b,cls){cls=cls||"";const hot=cls==="ng"?"ng":"hot";flash(a,hot);if(reduce){flash(b,hot);return}
+  const key=paths[a+">"+b]?a+">"+b:b+">"+a,rev=!paths[a+">"+b],path=paths[key];if(!path)return;
+  const L=path.getTotalLength(),dot=mk("circle",{r:6,class:"packet "+cls});svg.appendChild(dot);const t0=performance.now();
+  (function step(now){const f=Math.min(1,(now-t0)/900),pt=path.getPointAtLength((rev?1-f:f)*L);dot.setAttribute("cx",pt.x);dot.setAttribute("cy",pt.y);
+    if(f<1)requestAnimationFrame(step);else{dot.remove();flash(b,hot)}})(t0)}
+const STAGES=["企画","法令チェック","公開","SNS告知","計測","ChatGPT共有","Claude Code"],lane=document.getElementById("lane"),stageEls={};
+STAGES.forEach(s=>{const d=document.createElement("div");d.className="stage";d.innerHTML=s+"<b>0</b>";lane.appendChild(d);stageEls[s]=d});
+const WF={"1":"企画","3":"法令チェック","4":"公開","5":"SNS告知","6":"計測","8":"計測","10":"ChatGPT共有"};
+const stageOf=name=>name==="Claude Code"?"Claude Code":(WF[(name.match(/^(\d+)\./)||[])[1]]||name);
+const TRIG={schedule:"定時",push:"マージ後",pull_request:"PR",workflow_run:"公開の後",workflow_dispatch:"手動",issue_comment:"コメント"};
+const fmt=iso=>{const d=new Date(iso),p=n=>String(n).padStart(2,"0");return `${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`};
+const feed=document.getElementById("feed");
+function log(e,tags,text){const li=document.createElement("li"),time=document.createElement("time"),div=document.createElement("div");
+  time.textContent=fmt(e.t);div.innerHTML=tags.map(([c,l])=>`<span class="tag ${c}">${l}</span>`).join("");div.append(document.createTextNode(text));
+  li.append(time,div);feed.prepend(li);while(feed.children.length>60)feed.lastChild.remove()}
+function animate(e){
+  if(e.k==="run"){const st=stageOf(e.name),ng=e.concl&&e.concl!=="success"&&e.concl!=="skipped";
+    if(e.concl==="skipped")return;
+    if(st==="公開")send("gh","site",ng?"ng":"");else if(st==="SNS告知")send("gh","x",ng?"ng":"");
+    else if(st==="計測")send("site","gh","data");else if(st==="ChatGPT共有")send("gh","gpt",ng?"ng":"");
+    else if(st==="Claude Code")send("gh","cc",ng?"ng":"");else flash("gh",ng?"ng":"hot");
+    const tags=[[st==="Claude Code"?"claude":"gh",st]];tags.push(e.status!=="completed"?["run","実行中"]:[ng?"ng":"ok",ng?"失敗":"成功"]);
+    log(e,tags,`${TRIG[e.event]||e.event}で実行`)}
+  else if(e.k==="commit"){if(e.bot){flash("gh");log(e,[["gh","GitHub"]],e.msg)}else{send("cc","gh");log(e,[["claude","Claude Code"]],e.msg)}}
+  else if(e.k==="pr"){send("op","gh");log(e,[["claude","PR"],["ok","マージ"]],`#${e.n} ${e.msg}`)}
+  else if(e.k==="cm"){if(e.who==="gpt"){send("gpt","gh","data");log(e,[["gpt","ChatGPT"]],"回答をIssue #39に記録")}
+    else if(e.who==="claude"){send("cc","gh","data");log(e,[["claude","Claude Code"]],"Issue #39に照合結果を記入")}
+    else{send("op","cc");log(e,[["gh","依頼"]],"@claude に照合を依頼")}}}
+const etags={},cache={};
+async function get(path){const h={"Accept":"application/vnd.github+json"};if(etags[path])h["If-None-Match"]=etags[path];
+  const r=await fetch(API+path,{headers:h});if(r.status===304)return cache[path];if(!r.ok)throw new Error(r.status);
+  etags[path]=r.headers.get("ETag");cache[path]=await r.json();return cache[path]}
+let seen=new Set(),first=true;
+async function poll(){const liveEl=document.getElementById("live"),lt=document.getElementById("livetext");
+  try{const [runs,commits,prs,open,cms]=await Promise.all([get("/actions/runs?per_page=40"),get("/commits?per_page=30"),
+      get("/pulls?state=closed&per_page=15&sort=updated&direction=desc"),get("/pulls?state=open&per_page=30"),get("/issues/39/comments?per_page=30")]);
+    const ev=[];
+    runs.workflow_runs.forEach(r=>ev.push({id:"r"+r.id+r.status+(r.conclusion||""),k:"run",t:r.updated_at||r.created_at,name:r.name,status:r.status,concl:r.conclusion,event:r.event}));
+    commits.forEach(x=>ev.push({id:"c"+x.sha,k:"commit",t:x.commit.author.date,bot:/\[bot\]/.test((x.author&&x.author.login)||x.commit.author.name||""),msg:x.commit.message.split("\n")[0].slice(0,70)}));
+    prs.filter(p=>p.merged_at).forEach(p=>ev.push({id:"p"+p.number,k:"pr",t:p.merged_at,n:p.number,msg:p.title.slice(0,60)}));
+    cms.forEach(m=>{const who=/claude/.test(m.user.login)?"claude":(/github-actions/.test(m.user.login)?(/ChatGPT/.test(m.body)?"gpt":"bot"):"op");
+      if(who==="bot")return;if(who==="op"&&!/@claude/.test(m.body))return;ev.push({id:"m"+m.id,k:"cm",t:m.created_at,who})});
+    ev.sort((a,b)=>a.t.localeCompare(b.t));
+    const fresh=ev.filter(e=>!seen.has(e.id));fresh.forEach(e=>seen.add(e.id));
+    if(first){ev.slice(-25).forEach((e,i)=>setTimeout(()=>animate(e),reduce?0:i*450));first=false}else fresh.forEach((e,i)=>setTimeout(()=>animate(e),i*700));
+    // 状況の帯
+    const now=Date.now(),day=ev.filter(e=>now-new Date(e.t)<864e5);
+    document.getElementById("s-last").textContent=ev.length?fmt(ev[ev.length-1].t):"―";
+    const todayStr=new Date().toDateString(),sns=runs.workflow_runs.filter(r=>/^5\./.test(r.name)&&new Date(r.created_at).toDateString()===todayStr&&r.conclusion==="success");
+    const posted=commits.some(x=>/^SNS告知/.test(x.commit.message)&&new Date(x.commit.author.date).toDateString()===todayStr);
+    document.getElementById("s-sns").textContent=posted?"投稿済み":(sns.length?"確認済み・未投稿":"まだ");
+    const rev=open.filter(p=>(p.labels||[]).some(l=>l.name==="needs-review")).length;
+    document.getElementById("s-pr").textContent=`${open.length}件（要確認${rev}件）`;
+    const running=runs.workflow_runs.filter(r=>r.status!=="completed");document.getElementById("s-run").textContent=running.length?running.map(r=>stageOf(r.name)).join("・"):"なし";
+    nodeEls.gh.classList.toggle("busy",running.length>0);
+    const ng=runs.workflow_runs.filter(r=>now-new Date(r.created_at)<864e5&&r.conclusion==="failure").length;document.getElementById("s-ng").textContent=ng+"件";
+    const cnt={};STAGES.forEach(s=>cnt[s]=0);runs.workflow_runs.filter(r=>now-new Date(r.created_at)<864e5&&r.conclusion!=="skipped").forEach(r=>{const s=stageOf(r.name);if(s in cnt)cnt[s]++});
+    STAGES.forEach(s=>{stageEls[s].querySelector("b").textContent=cnt[s]});
+    liveEl.classList.remove("err");lt.textContent="ライブ（"+fmt(new Date().toISOString())+" 更新）";
+  }catch(err){liveEl.classList.add("err");lt.textContent="読み込みに失敗（"+err.message+"）。数分後に再試行します"}}
+poll();setInterval(poll,POLL_MS);
+})();
+</script>
+</body>
+</html>

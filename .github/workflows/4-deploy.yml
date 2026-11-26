@@ -3,7 +3,7 @@ name: 4. 公開
 on:
   push:
     branches: [main]
-    paths: ["content/**", "affteam/build.py", "config.yaml"]
+    paths: ["content/**", "affteam/build.py", "affteam/templates/**", "config.yaml"]
   workflow_dispatch:
 permissions:
   contents: read
