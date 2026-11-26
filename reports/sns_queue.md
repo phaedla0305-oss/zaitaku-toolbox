@@ -30,6 +30,13 @@ https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/kisei-telework-ip-sei
 https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/sekai-vpn-myip-difference.html?utm_source=x&utm_medium=social&utm_campaign=sekai-vpn-myip-difference&utm_content=v4
 ```
 
+## moving-fiber-waiting-telework-internet（案 v4）
+
+```
+【PR】光回線の工事日まで何日？開通後も予備回線として使う？期間と使い道から、テザリング/ホームルーター/コワーキング/出社寄せの選び方を整理
+https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/moving-fiber-waiting-telework-internet.html?utm_source=x&utm_medium=social&utm_campaign=moving-fiber-waiting-telework-internet&utm_content=v4
+```
+
 ## cafe-free-wifi-safety-vpn（案 v5）
 
 ```
