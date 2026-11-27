@@ -1,13 +1,6 @@
-# SNS 投稿キュー（2026-11-26）
+# SNS 投稿キュー（2026-11-27）
 
 手動投稿する場合はコピーして使ってください。
-
-## zaitaku-home-router-erabikata（案 v3）
-
-```
-【PR】回線の測定結果は、どんな条件で測ったかもセットで確認。自宅の光回線をWi-Fiで測った例と、自分の環境を確かめる手順を記事にまとめました。ホームルーターの実測ではありません。
-https://phaedla0305-oss.github.io/zaitaku-toolbox/articles/zaitaku-home-router-erabikata.html?utm_source=x&utm_medium=social&utm_campaign=zaitaku-home-router-erabikata&utm_content=v3
-```
 
 ## freelance-kotei-ip-hitsuyou-mail-template（案 v3）
 
