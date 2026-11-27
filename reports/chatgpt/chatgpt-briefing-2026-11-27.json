@@ -1,0 +1,12 @@
+{
+  "check_order_if_unindexed": [
+    "Search Consoleで確認（送信は行わない）：1)「ページ」→該当URLの理由（Unknown/Discovered/Crawled など）を特定、2) URL検査のライブテストで『インデックス可否』『取得可否（ページ取得・レンダリング）』『robots 判定』を確認、3) サイトマップの『最終読込日時』『ステータス』が11/16以降に更新されているかを確認",
+    "HTTPレベルの挙動を確認（費用0）：①③とサイトマップの最終URLに対してヘッダー取得（curl -I 等）。200 OK/リダイレクト有無、X-Robots-Tag（noindex/nofollow/none）不在、Content-Type 適正、サイトマップ内の<loc>と最終到達URL（スラッシュ有無・https・パス）が一致しているかを確認",
+    "発見性の再点検：①③へ張っているサイト内リンクのうち、少なくとも1ページが『インデックス済み』であることをGSCで確認（未インデックスのページだけがリンク元だと発見が遅れるため）。必要に応じてトップの常時表示領域（グロナビ/トップ本文）からのテキストリンクがあるかを確認"
+  ],
+  "sitemap_resubmit": {
+    "recommend_if": "11/30時点でもGSCのサイトマップが『処理中/取得できません/読み取りなし』のまま、かつ実ファイルは200 OKで取得可能・XML妥当・<loc>が正しい完全URL（https・/zaitaku-toolbox/ を含む）である場合",
+    "avoid_if": "GSCのサイトマップが『成功』で直近に読まれており、発見URL数も想定（トップ＋6記事）と整合。ページ側の理由が『Discovered もしくは Crawled – currently not indexed』などURL単位の評価にある場合（サイトマップ再送は効果が薄い）"
+  },
+  "possible_gap": "HTMLのmeta robotsは問題なしでも、HTTPヘッダーのX-Robots-Tagでnoindex等が付与されている可能性の未確認（GitHub Pages/中継CDNでの付与含む）"
+}
